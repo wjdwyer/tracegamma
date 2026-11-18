@@ -283,7 +283,7 @@ annotation text had not: `actions/upload-artifact@v4`.)*
 
 ---
 
-## 9. Released, 2026-11-18 — v0.1.0 out, v0.1.1 staged
+## 9. Released, 2026-11-18 — v0.1.0 and v0.1.1 both out
 
 ### 9.1 What shipped, and how it was confirmed
 
@@ -356,7 +356,43 @@ majors read from each action's release feed, not assumed.
 annotation and I did not verify its current major, so bumping it would be a
 guess wearing the same commit message as three measurements.
 
-### 9.5 Still open
+### 9.5 v0.1.1 released, and what that confirmed
+
+Tagged and released after all three workflows passed on `326c5a2`. Zenodo
+version DOI `10.5281/zenodo.24355601`; the concept DOI `10.5281/zenodo.24354607`
+now spans both versions and resolves to the newer. Nothing in `CITATION.cff`
+needed editing — carrying only the concept DOI is what makes that true, and it
+will stay true for every later release.
+
+The wheel PyPI serves was pulled down and run in a clean environment:
+
+| | |
+|---|---|
+| module `__version__` | 0.1.1 |
+| metadata `Version` | 0.1.1 |
+| `Requires-Python` | `>=3.10` |
+| Deposit URL | `https://doi.org/10.5281/zenodo.24354607` |
+| `cutoff(0.05)` on (4,2,1,1) | 21.24937381477673 — **identical to 0.1.0** |
+
+The first two lines agreeing is the §9.2 defect confirmed fixed in the published
+artifact, not just locally. The last line tests "metadata only, no behaviour
+change" against what users actually download.
+
+**A wrong reading I nearly reported.** The first clean-venv install returned
+0.1.0, which looked like PyPI serving stale metadata. It was this machine's pip
+cache from installing 0.1.0 an hour earlier. `pip download` had already fetched
+the 0.1.1 wheel from the index, which is what settled it. The same caution
+applies to anyone checking from a machine that has installed 0.1.0:
+`pip install --no-cache-dir --upgrade tracegamma`.
+
+**One `python` cell failed again on macOS**, the third run in a row to lose a
+macOS job to the scheduler: queued 15m 36s, never assigned a runner,
+`conclusion: cancelled`, zero steps. Re-running it alone took 38 seconds. Across
+three runs that is 2 of 15 macOS job attempts lost to infrastructure and none to
+a defect in this package. Whether to prune the macOS matrix is an open decision,
+not a repair.
+
+### 9.6 Still open
 
 1. `cran-comments.md` is a template. CRAN asks the submitter to account for
    every NOTE, and the NOTEs from the passing `--as-cran` run have not been read.
