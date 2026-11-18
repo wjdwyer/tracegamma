@@ -10,3 +10,6 @@ dist/
 *.tar.gz
 !python/dist/*.tar.gz
 .DS_Store
+
+# internal operations notes, not for the public repo
+PUBLISH_RUNBOOK.md

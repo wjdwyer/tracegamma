@@ -4,10 +4,10 @@ Two installable, documented packages built from the research code in
 `mdist_work/`, under the scope elected by the project owner: **everything in the
 tree**, package name **`tracegamma`** in both ecosystems.
 
-This closes the blocker recorded in the ISR deep dive §7, which said JSS and the
-R Journal were out "until the implementation is a documented installable
-package, which is months of work." The library half of that is now done; see §7
-below for what is still missing before a software submission.
+Until now the implementation was a research module and an HTML demonstrator,
+not a package anyone could install, which ruled out the software-journal route.
+The library half of that is now done; §7 below lists what is still missing
+before a software submission.
 
 ---
 
