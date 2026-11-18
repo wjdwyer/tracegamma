@@ -1,5 +1,8 @@
 # tracegamma
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24354607.svg)](https://doi.org/10.5281/zenodo.24354607)
+[![PyPI](https://img.shields.io/pypi/v/tracegamma.svg)](https://pypi.org/project/tracegamma/)
+
 The **trace-gamma** distribution: a three-cumulant calibrated reference for
 quadratic-form tests, with Welch's F and Pearson's chi-square as special cases.
 Python and R implementations of one object, checked against each other.
@@ -7,9 +10,9 @@ Python and R implementations of one object, checked against each other.
 | | Python | R |
 |---|---|---|
 | source | [`python/`](python/) | [`r/tracegamma/`](r/tracegamma/) |
-| install | `pip install tracegamma` | `install.packages("tracegamma")` |
+| install | `pip install tracegamma` | not on CRAN yet — `remotes::install_github("wjdwyer/tracegamma", subdir = "r/tracegamma")` |
 | docs | docstrings + doctests | `man/*.Rd` |
-| tests | 99, pytest | testthat + parity fixture |
+| tests | 83 pytest + doctests (99 with the deposited module present) | testthat + parity fixture |
 
 A test statistic that is a quadratic form `Q = a' M a` in a near-normal vector
 has an exact null law — a generalized chi-square — with no closed form. The
@@ -63,9 +66,11 @@ Ported from the research code deposited with the paper (Zenodo concept DOI
 changes no formula and no constant; the Python suite pins it to the deposited
 module value for value. Departures are listed in `python/CHANGELOG.md`.
 
-- **Python:** tested, builds, installs.
-- **R:** structurally checked but **`R CMD check` has not yet been run** — see
-  [`r/tracegamma/README.md`](r/tracegamma/README.md).
+- **Python:** tested on 3.10–3.14 across Linux, macOS and Windows; on PyPI.
+- **R:** `R CMD check --as-cran` passes on ubuntu release, ubuntu oldrel-1,
+  macOS and Windows. **Not on CRAN yet** — install from GitHub for now.
+- **Archived** at Zenodo, concept DOI
+  [10.5281/zenodo.24354607](https://doi.org/10.5281/zenodo.24354607).
 - **AI assistance** was used in building these packages and is disclosed in
   [`AI_DISCLOSURE.md`](AI_DISCLOSURE.md).
 

@@ -77,9 +77,13 @@ two implementations cannot drift apart silently.
 R CMD check tracegamma
 ```
 
-**The R package was written and structurally checked, but not executed:** no R
-interpreter was available in the environment where it was built.
-`check_r_package.py` verifies file layout, NAMESPACE/definition/help-page
-agreement, usage lines against real signatures, documented arguments, and
-bracket balance. It cannot run the code, the examples, or the testthat suite.
-**Run `R CMD check` before relying on it.**
+**`R CMD check --as-cran` passes** on ubuntu release, ubuntu oldrel-1, macOS
+and Windows, run in CI on every push (2026-11-18, first attempt). The testthat
+suite runs against the shared parity fixture in the same check.
+
+The package was originally written without an R interpreter available, and
+`check_r_package.py` was built to verify what can be verified without one:
+file layout, NAMESPACE/definition/help-page agreement, usage lines against real
+signatures, documented arguments, and bracket balance. It still runs first in
+CI, because it catches those classes in seconds rather than fifteen minutes.
+It is no longer the only evidence.

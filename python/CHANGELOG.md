@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.1.1 — 2026-11-18
+
+Metadata only. **No formula, constant or returned value changes**; 0.1.0 and
+0.1.1 compute identically.
+
+- **Archived and citable.** Zenodo concept DOI `10.5281/zenodo.24354607`, which always
+  resolves to the latest version and is the one to cite. Version 0.1.0 is
+  `10.5281/zenodo.24354608`. Both are recorded in `CITATION.cff`.
+- **Correction to the 0.1.0 notes.** Those notes said the R package had not
+  been executed and that `R CMD check` should be run before relying on it.
+  That was true when written and is no longer: `R CMD check --as-cran` passed
+  on ubuntu release, ubuntu oldrel-1, macOS and Windows on 2026-11-18, at the
+  first attempt. The 0.1.0 text is left as published; this entry supersedes it.
+- **A false claim removed from the README.** It advertised
+  `install.packages("tracegamma")`. The package is not on CRAN and that line
+  should never have shipped. Corrected to install-from-GitHub, with the CRAN
+  status stated plainly.
+- Supported Python versions are 3.10 through 3.14, tested on Linux, macOS and
+  Windows. Unchanged from the published 0.1.0, whose notes did not state it.
+- GitHub Actions moved off Node 20 (`checkout@v7`, `setup-python@v7`,
+  `upload-artifact@v7`).
+
 ## 0.1.0 — 2026-11-18
 
 First release. Ported from the research code deposited with the trace-gamma

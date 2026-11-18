@@ -278,4 +278,89 @@ cell, or state that only current dependencies are supported.
 `actions/checkout@v4` and `actions/setup-python@v5` target Node.js 20 and are
 being forced onto Node.js 24. They work today. The bump is deliberately held
 back so that this commit changes one variable; it should be a separate commit
-after the matrix is green.
+after the matrix is green. *(Done in §9.4. The tooltip named a third action the
+annotation text had not: `actions/upload-artifact@v4`.)*
+
+---
+
+## 9. Released, 2026-11-18 — v0.1.0 out, v0.1.1 staged
+
+### 9.1 What shipped, and how it was confirmed
+
+| | result | how it was checked |
+|---|---|---|
+| PyPI | `tracegamma` 0.1.0 live | downloaded from the index on a machine with no access to this tree, installed into a clean venv, and run |
+| Zenodo | concept `10.5281/zenodo.24354607`, version `10.5281/zenodo.24354608` | **DataCite** API, not the Zenodo page — both `findable`, concept `HasVersion` → version, version `IsVersionOf` → concept |
+| relation | `IsSupplementTo 10.5281/zenodo.22060095`, typed JournalArticle | same DataCite records; the GitHub URL and the ORCID are carried too |
+| CI | 15 matrix jobs + build, all green | `python` run #2 |
+
+The installed 0.1.0 returns `cutoff(0.05) = 21.24937381477673` for the spectrum
+`(4, 2, 1, 1)` — the value §3 records me inventing twice from memory, now
+coming out of a published artifact on someone else's machine.
+
+Trusted publishing worked as designed: no API token exists in this repository
+or in its secrets. The pending publisher converted to an ordinary one on first
+upload, which is what claims the name.
+
+**One failure worth recording as not-ours.** The first attempt at `python` run
+#2 lost one cell with *"The job was not acquired by Runner of type hosted"* and
+a run-level internal server error. No checkout, no install, no pytest — the job
+never reached a machine. Re-running it was the whole fix. It is recorded so the
+history does not later read as flakiness in this package.
+
+### 9.2 Two defects of mine in the v0.1.1 pass
+
+1. **A false claim had been sitting in the public README**: an install line
+   reading `install.packages("tracegamma")`. The package is not on CRAN. It was
+   not caught by any check — it was caught by reading the file while editing it
+   for something else. Corrected to install-from-GitHub with the CRAN status
+   stated. Nothing in CI would have found it, which is the point: it is a true
+   sentence about a world that does not exist yet.
+2. **I shipped a wheel whose metadata and module disagreed.** `pyproject.toml`
+   said 0.1.1; `src/tracegamma/__init__.py` still said 0.1.0. My version-source
+   list was built from a grep restricted to `*.toml`, `*.cff`, `DESCRIPTION`
+   and `*.md` — it never looked at a `.py` file. Caught by installing the built
+   wheel and asking the module, rather than reading the metadata I had just
+   written. `__init__.py` is now the eighth checked source.
+
+Both are the same shape as §3 and §8.2: a claim written from an incomplete
+survey, found only by executing something.
+
+### 9.3 `check_release_metadata.py`, and the check I deleted
+
+Three checks, each with a named failure mode: one version string across all
+eight files; the three `CITATION.cff` byte-identical; both DOIs present in each.
+Run in the parity workflow. Mutation-tested — it fires on a stale R version, a
+diverged citation file, a changed concept DOI, a dropped paper DOI, a lagging
+changelog, a renamed version key, and on the `__init__.py` defect above.
+
+A fourth check was written and **removed**: "the changelog's newest entry
+matches the declared version". Its mutation fired, but through check V1, not
+through itself — the changelog heading is one of V1's own version sources, so a
+lagging changelog is a version disagreement by construction. A check that can
+only echo another inflates the count without adding evidence.
+
+The patch script that applied this pass (`tg_v011_metadata_patch.py`) refused
+twice before writing anything, both times correctly: once because
+`setup-python@v5` occurs twice in `python.yml` and I had declared one, and once
+because my "no superseded claim survives" scan was reading the changelog's
+*description* of the removed CRAN line as the line itself. The second was the
+check being too crude — a claim is superseded where a reader would act on it,
+not where it is quoted in a correction — and it is now scoped per file.
+
+### 9.4 Node 20
+
+`checkout@v4 → v7`, `setup-python@v5 → v7`, `upload-artifact@v4 → v7`; latest
+majors read from each action's release feed, not assumed.
+`download-artifact@v4` is **left alone**: it was not named in the deprecation
+annotation and I did not verify its current major, so bumping it would be a
+guess wearing the same commit message as three measurements.
+
+### 9.5 Still open
+
+1. `cran-comments.md` is a template. CRAN asks the submitter to account for
+   every NOTE, and the NOTEs from the passing `--as-cran` run have not been read.
+2. Dependency floors (`numpy>=1.21`, `scipy>=1.7`) are declared and untested,
+   and vacuous at the bottom now that the floor is Python 3.10.
+3. §7 item 2 — whether the Imhof defect touches the paper's published
+   cross-check — is unchanged and unanswered.

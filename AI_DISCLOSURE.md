@@ -55,8 +55,11 @@ Signed: ______________________  Date: ____________
 
 ## Known limits of the assistance
 
-- The R package was **never executed**: no R interpreter was available in the
-  build environment. It was checked structurally only.
+- The R package was **never executed during the build**: no R interpreter was
+  available in the build environment. It was checked structurally only.
+  **Updated 2026-11-18:** it has since been executed. `R CMD check --as-cran`
+  passed on four platforms in CI at the first attempt, which is corroboration
+  of the structural check, not a substitute for the reader's own judgement.
 - Two defects introduced by the assistant during the build were caught and are
   recorded in `BUILD_RECORD_2026-11-18.md` §3: an invented documentation value,
   and two wrong diagnoses of a quadrature failure before it was measured

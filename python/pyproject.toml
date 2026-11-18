@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tracegamma"
-version = "0.1.0"
+version = "0.1.1"
 description = "The trace-gamma distribution: a three-cumulant calibrated reference for quadratic-form tests"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -37,7 +37,8 @@ Homepage = "https://github.com/wjdwyer/tracegamma"
 Repository = "https://github.com/wjdwyer/tracegamma"
 Issues = "https://github.com/wjdwyer/tracegamma/issues"
 Changelog = "https://github.com/wjdwyer/tracegamma/blob/main/python/CHANGELOG.md"
-Deposit = "https://doi.org/10.5281/zenodo.22060095"
+Deposit = "https://doi.org/10.5281/zenodo.24354607"
+Paper = "https://doi.org/10.5281/zenodo.22060095"
 
 [tool.setuptools.packages.find]
 where = ["src"]
