@@ -1,0 +1,27 @@
+name: cross-language parity
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  parity:
+    name: the two fixtures must be identical
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: The R package's fixture must match the Python package's
+        run: |
+          a=python/src/tracegamma/data/parity.json
+          b=r/tracegamma/inst/parity/parity.json
+          if ! cmp -s "$a" "$b"; then
+            echo "::error::parity.json differs between the two packages."
+            echo "Regenerate it from Python and copy it into r/tracegamma/inst/parity/."
+            diff <(head -c 4000 "$a") <(head -c 4000 "$b") || true
+            exit 1
+          fi
+          echo "fixtures are byte-identical ($(wc -c < "$a") bytes)"
+      - name: The structural R check must pass without an R interpreter
+        run: python3 check_r_package.py r/tracegamma

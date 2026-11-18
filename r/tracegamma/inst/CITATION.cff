@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the software and the paper."
+title: "tracegamma: the trace-gamma calibrated reference for quadratic-form tests"
+version: 0.1.0
+date-released: 2026-11-18
+license: MIT
+authors:
+  - family-names: Dwyer
+    given-names: William J.
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.22060095
+    description: Zenodo concept DOI for the paper and its deposit

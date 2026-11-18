@@ -1,0 +1,25 @@
+{
+  "title": "tracegamma: the trace-gamma calibrated reference for quadratic-form tests (Python and R)",
+  "description": "<p>Python and R implementations of the trace-gamma distribution: the closed-form shifted, scaled chi-square matched to the first three cumulants of a quadratic form in near-normal variables. Welch's F is its two-cumulant member and Pearson's chi-square its equal-eigenvalue member. Also provides the exact generalized chi-square by Imhof inversion, the kurtosis and tail-rate defects, and an estimable non-normal correction. The two implementations are checked against each other by a shared parity fixture.</p>",
+  "license": "MIT",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Dwyer, William J.",
+      "affiliation": "University of Massachusetts Lowell, Department of Mathematics and Statistics"
+    }
+  ],
+  "keywords": [
+    "quadratic form", "generalized chi-square", "Satterthwaite", "Welch",
+    "Behrens-Fisher problem", "heteroscedasticity", "reference distribution",
+    "Imhof inversion", "Python", "R"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.22060095",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-article",
+      "scheme": "doi"
+    }
+  ]
+}
