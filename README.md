@@ -71,4 +71,7 @@ module value for value. Departures are listed in `python/CHANGELOG.md`.
 
 Build record and measured findings: [`BUILD_RECORD_2026-11-18.md`](BUILD_RECORD_2026-11-18.md).
 
+William J. Dwyer, University of Massachusetts Lowell, Department of
+Mathematics and Statistics ([ORCID 0009-0004-0855-7222](https://orcid.org/0009-0004-0855-7222)).
+
 MIT licensed. Contributions welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md).

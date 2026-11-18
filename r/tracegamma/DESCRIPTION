@@ -3,7 +3,8 @@ Type: Package
 Title: The Trace-Gamma Calibrated Reference for Quadratic-Form Tests
 Version: 0.1.0
 Authors@R: person("William J.", "Dwyer", role = c("aut", "cre"),
-                  email = "wjdwyer@trialdesign.com")
+                  email = "wjdwyer@trialdesign.com",
+                  comment = c(ORCID = "0009-0004-0855-7222"))
 Description: The trace-gamma distribution is the closed-form shifted, scaled
     chi-square matched to the first three cumulants of a quadratic form in
     near-normal variables. Those cumulants are exact traces of one matrix

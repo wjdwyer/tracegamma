@@ -8,6 +8,7 @@ repository-code: https://github.com/wjdwyer/tracegamma
 authors:
   - family-names: Dwyer
     given-names: William J.
+    orcid: "https://orcid.org/0009-0004-0855-7222"
 identifiers:
   - type: doi
     value: 10.5281/zenodo.22060095
