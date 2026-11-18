@@ -178,3 +178,104 @@ and the README says so in those words.
 4. Research scripts ship as scripts. If a JSS submission is the target, they
    need either promotion to a documented interface or explicit exclusion.
 5. Neither package is published to PyPI or CRAN. The names are unclaimed.
+
+---
+
+## 8. First CI run, 2026-11-18 (commit `67497b3`)
+
+The repository was made public and three workflows ran. This section records
+what that execution actually established, because §6 above was written when
+nothing had been executed outside one sandbox.
+
+### 8.1 `R CMD check` passed on all four platforms — item 1 of §7 is closed
+
+`R-CMD-check` run #1, conclusion **success**, 15m 13s: `R CMD check --as-cran
+--no-manual` plus the testthat suite against `parity.json`, on ubuntu release,
+ubuntu oldrel-1, macOS release and Windows release, with `fail-fast: false` so
+each is an independent result.
+
+**This is the first time the R code has been executed anywhere.** §6 said the
+structural checker proves layout and agreement, not behaviour, and that
+`R CMD check` had to be run before the package was relied on. It has been, and
+it is clean on four platforms at the first attempt. The structural checker is
+corroborated rather than superseded: it still catches the classes it was built
+for before a push costs fifteen minutes.
+
+`cross-language parity` also passed (1m 32s), confirming on a clean runner that
+the two `parity.json` files are byte-identical and that `check_r_package.py`
+reports PASS away from the machine that wrote it.
+
+### 8.2 The `python` workflow failed in one cell of thirteen, and not for a
+reason in this package
+
+Twelve of thirteen jobs passed: every macOS and Windows cell including 3.9,
+three of four Linux cells, and `build and check distributions`. The single
+failure was **`pytest 3.9 on ubuntu-latest`**, at the `actions/setup-python`
+step — *before* installation, so no line of `tracegamma` ran. The run's failure
+annotation, quoted exactly:
+
+> The version '3.9' with architecture 'x64' was not found for Ubuntu 26.04.
+
+`ubuntu-latest` migrated to Ubuntu 26.04 on 19 October 2026, and
+`actions/python-versions` publishes no 3.9 build for that image. Python 3.9 has
+been end-of-life since October 2025.
+
+**This was my defect, not GitHub's.** I wrote a matrix cell for an interpreter
+I never checked could be provisioned, and `requires-python = ">=3.9"` asserted a
+support surface on that basis. The same shape as the other errors in §3: a claim
+made from recollection and shipped without the one measurement that would have
+settled it.
+
+### 8.3 What was measured before deciding, and what it showed
+
+Dependency resolution under each interpreter, by `pip install --dry-run` against
+the real index, not from memory:
+
+| interpreter | resolves to |
+|---|---|
+| cp39 | numpy 2.0.2, scipy 1.13.1 |
+| cp313 | numpy 2.2.6, scipy 1.16.3 |
+| cp314 | numpy 2.5.5, scipy 1.18.1 |
+
+So the 3.9 cell was not testing a stack any new user installs: numpy requires
+3.10+ from 2.1 onward, and the cell silently pinned dependencies more than two
+years old. Dropping 3.9 removes a cell that could not run and was testing the
+wrong thing when it could.
+
+**A probe artifact I had to correct.** My first cp314 probe reported *no numpy
+wheel at all*, and the obvious reading was that 3.14 is not yet supported. It
+was my probe: I had offered only `manylinux2014`/`manylinux_2_17` platform tags,
+and the cp314 wheels are tagged `manylinux_2_27`/`manylinux_2_28`. Re-running
+with those tags returned the wheels above. The absence was in my predicate, not
+on the index — the fourth time in this project that a measurement failure has
+looked like a finding.
+
+### 8.4 The change
+
+- matrix `["3.9","3.10","3.11","3.12"]` → `["3.10","3.11","3.12","3.13","3.14"]`;
+  12 test cells become 15, each one provisionable and each one on a current
+  dependency stack
+- `requires-python = ">=3.9"` → `">=3.10"`
+- one `Programming Language :: Python :: X.Y` classifier per tested version, so
+  what PyPI advertises is exactly what CI runs
+- `check_version_claims.py`, new, run in the `build` job: it fails if the
+  classifiers and the matrix disagree, **and fails if either list is empty**, so
+  it cannot report a pass over nothing. Mutation-tested 9/9 — it fires on a
+  deleted classifier, a deleted matrix entry, all classifiers removed, an
+  emptied matrix, a duplicated or renamed matrix line, a missing
+  `pyproject.toml`, and on 3.9 being reintroduced into the matrix alone; it
+  stays quiet on the unmodified repository. It does not import a YAML parser,
+  because PyYAML reads the workflow's bare `on:` key as the boolean `True`
+  (YAML 1.1) and that has already produced one false failure here.
+
+Dependency floors (`numpy>=1.21`, `scipy>=1.7`) were left alone. They are now
+vacuous at the bottom — scipy 1.7 does not support 3.10 — but they are not
+false, and nothing in CI tests the floor on any interpreter. **Open:** either
+raise them to the oldest versions that actually install under 3.10 and test that
+cell, or state that only current dependencies are supported.
+
+**Also open, non-blocking:** every run carries a warning that
+`actions/checkout@v4` and `actions/setup-python@v5` target Node.js 20 and are
+being forced onto Node.js 24. They work today. The bump is deliberately held
+back so that this commit changes one variable; it should be a separate commit
+after the matrix is green.

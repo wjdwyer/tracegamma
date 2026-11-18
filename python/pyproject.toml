@@ -7,7 +7,7 @@ name = "tracegamma"
 version = "0.1.0"
 description = "The trace-gamma distribution: a three-cumulant calibrated reference for quadratic-form tests"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [{name = "William J. Dwyer"}]
 keywords = ["quadratic form", "generalized chi-square", "Satterthwaite",
@@ -17,6 +17,14 @@ classifiers = [
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",
+  # One classifier per version the CI matrix actually runs. If a version is
+  # added or removed here it must be added or removed in python.yml too: an
+  # untested classifier is a claim, not a fact.
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Topic :: Scientific/Engineering :: Mathematics",
 ]
 dependencies = ["numpy>=1.21", "scipy>=1.7"]
