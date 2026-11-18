@@ -1,8 +1,7 @@
 # tracegamma packages — build record, 2026-11-18
 
-Two installable, documented packages built from the research code in
-`mdist_work/`, under the scope elected by the project owner: **everything in the
-tree**, package name **`tracegamma`** in both ecosystems.
+Two installable, documented packages built from the author's research tree,
+under the scope elected by the project owner: **everything in that tree**, package name **`tracegamma`** in both ecosystems.
 
 Until now the implementation was a research module and an HTML demonstrator,
 not a package anyone could install, which ruled out the software-journal route.
@@ -22,8 +21,7 @@ before a software submission.
 | tests | 99 passing (pytest + doctests) | 2 testthat files, **not executed** (§6) |
 | artifacts | wheel + sdist built, installs, imports | source tree, structurally checked |
 
-**Scope honoured without misrepresentation.** The owner chose "everything in
-`mdist_work`". The library-grade code is the public API: the distribution and
+**Scope honoured without misrepresentation.** The owner chose "everything in the research tree". The library-grade code is the public API: the distribution and
 its three constructors, the trace/cumulant helpers, the closed forms, the exact
 Imhof inversion, the two defects, the standardized cumulants, the non-normal
 correction, and the Berger-Boos dilation. The simulation drivers
