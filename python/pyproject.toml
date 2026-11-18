@@ -25,6 +25,10 @@ dependencies = ["numpy>=1.21", "scipy>=1.7"]
 test = ["pytest>=7"]
 
 [project.urls]
+Homepage = "https://github.com/wjdwyer/tracegamma"
+Repository = "https://github.com/wjdwyer/tracegamma"
+Issues = "https://github.com/wjdwyer/tracegamma/issues"
+Changelog = "https://github.com/wjdwyer/tracegamma/blob/main/python/CHANGELOG.md"
 Deposit = "https://doi.org/10.5281/zenodo.22060095"
 
 [tool.setuptools.packages.find]

@@ -4,6 +4,7 @@ title: "tracegamma: the trace-gamma calibrated reference for quadratic-form test
 version: 0.1.0
 date-released: 2026-11-18
 license: MIT
+repository-code: https://github.com/wjdwyer/tracegamma
 authors:
   - family-names: Dwyer
     given-names: William J.

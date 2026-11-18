@@ -10,9 +10,16 @@
     }
   ],
   "keywords": [
-    "quadratic form", "generalized chi-square", "Satterthwaite", "Welch",
-    "Behrens-Fisher problem", "heteroscedasticity", "reference distribution",
-    "Imhof inversion", "Python", "R"
+    "quadratic form",
+    "generalized chi-square",
+    "Satterthwaite",
+    "Welch",
+    "Behrens-Fisher problem",
+    "heteroscedasticity",
+    "reference distribution",
+    "Imhof inversion",
+    "Python",
+    "R"
   ],
   "related_identifiers": [
     {
@@ -20,6 +27,12 @@
       "relation": "isSupplementTo",
       "resource_type": "publication-article",
       "scheme": "doi"
+    },
+    {
+      "identifier": "https://github.com/wjdwyer/tracegamma",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
     }
   ]
 }
