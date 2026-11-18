@@ -38,7 +38,12 @@ import sys
 CONCEPT_DOI = "10.5281/zenodo.24354607"   # this software, resolves to latest
 PAPER_DOI = "10.5281/zenodo.22060095"     # the paper and its deposit
 
-CFFS = ["CITATION.cff", "python/CITATION.cff", "r/tracegamma/inst/CITATION.cff"]
+# The R copy sits at the package root, not in inst/: `R CMD check --as-cran`
+# NOTEs a CITATION.cff inside inst/ as "a CITATION file in a non-standard
+# place", because inst/CITATION is R's own format. The root copy is excluded
+# from the built tarball by .Rbuildignore, and inst/CITATION carries the same
+# citation in R's format.
+CFFS = ["CITATION.cff", "python/CITATION.cff", "r/tracegamma/CITATION.cff"]
 
 # file -> regex whose single capture group is the version.
 #
@@ -59,7 +64,7 @@ VERSION_SOURCES = {
     "r/tracegamma/DESCRIPTION": r"^Version:\s*(\S+)",
     "CITATION.cff": r"^version:\s*(\S+)",
     "python/CITATION.cff": r"^version:\s*(\S+)",
-    "r/tracegamma/inst/CITATION.cff": r"^version:\s*(\S+)",
+    "r/tracegamma/CITATION.cff": r"^version:\s*(\S+)",
     "python/CHANGELOG.md": r"^## (\S+) —",
     "r/tracegamma/NEWS.md": r"^## (\S+) —",
 }

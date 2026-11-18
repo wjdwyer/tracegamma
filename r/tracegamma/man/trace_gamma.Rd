@@ -1,7 +1,10 @@
 \name{trace_gamma}
 \alias{trace_gamma}
 \title{The trace-gamma reference distribution}
-\usage{trace_gamma(k1 = NULL, k2 = NULL, k3 = NULL, lam = NULL, M = NULL, D = NULL, kurt_widen = 0, skew_shift = 0)}
+\usage{
+trace_gamma(k1 = NULL, k2 = NULL, k3 = NULL, lam = NULL, M = NULL,
+            D = NULL, kurt_widen = 0, skew_shift = 0)
+}
 \description{
 Fits \eqn{Q \approx b + a\,\chi^2_\nu} to three cumulants. Supply the
 cumulants directly, or give \code{lam}, or \code{M} and \code{D}.

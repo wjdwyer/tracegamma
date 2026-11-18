@@ -14,6 +14,71 @@ examples, or execute the testthat suite. Run `R CMD check` before any release.
 """
 import re, sys, pathlib, json
 
+
+def _braced(text, macro):
+    r"""The contents of \macro{...}, balancing nested braces.
+
+    Needed because \usage{\method{print}{trace_gamma}(x, ...)} contains braces
+    inside the body; a non-greedy regex stops at the first closing one and
+    hands back `\method{print`.
+    """
+    i = text.find("\\" + macro + "{")
+    if i < 0:
+        return None
+    j, depth, out = i + len(macro) + 2, 1, []
+    while j < len(text) and depth:
+        depth += (text[j] == "{") - (text[j] == "}")
+        if depth:
+            out.append(text[j])
+        j += 1
+    return "".join(out) if depth == 0 else None
+
+
+def _parens(text, i):
+    """The text inside the parentheses that open at or after index i."""
+    i = text.find("(", i)
+    if i < 0:
+        return None
+    j, depth, out = i, 0, []
+    while j < len(text):
+        depth += (text[j] == "(") - (text[j] == ")")
+        if depth == 0:
+            return "".join(out[1:])
+        out.append(text[j])
+        j += 1
+    return None
+
+
+def _argsplit(argstr):
+    """Whole arguments, split on top-level commas only."""
+    out, depth, buf = [], 0, ""
+    for c in argstr:
+        if c in "([{":
+            depth += 1
+        elif c in ")]}":
+            depth -= 1
+        if c == "," and depth == 0:
+            out.append(buf)
+            buf = ""
+        else:
+            buf += c
+    out.append(buf)
+    return [a for a in out if a.strip()]
+
+
+def _argnames(argstr):
+    """Argument NAMES, splitting on top-level commas only.
+
+    A default value can contain both commas and parentheses --
+    `method = c("panel", "quad")` is the live example, on three help pages.
+    Splitting on every comma invents an argument called '"quad"'; the earlier
+    version of this checker instead used a regex that stopped at the first
+    ')', which made the whole \\usage unmatchable and silently skipped those
+    three pages. Neither failure was visible in the output.
+    """
+    return [a.split("=")[0].strip() for a in _argsplit(argstr)]
+
+
 def main(root):
     R = pathlib.Path(root)
     fail, info = [], []
@@ -54,30 +119,90 @@ def main(root):
         info.append("help page documents %s, which is neither exported nor defined" % a)
 
     # --- usage lines must match the real signature ---
+    #
+    # The usage body is extracted by balancing braces, not by regex. The old
+    # pattern required `)}` adjacent and a bare function name, so it could not
+    # read either of the two forms `R CMD check --as-cran` actually asks for:
+    # a \usage wrapped across lines (to stay under 90 characters) or the
+    # \method{generic}{class} markup required for S3 methods. It did not fail
+    # on them -- it SKIPPED the file, silently, which would have switched this
+    # check off for exactly the pages being edited.
+    rd_usage_checked, rd_usage_novalue = 0, 0
     for p in sorted((R / "man").glob("*.Rd")):
         t = p.read_text()
-        m = re.search(r"\\usage\{([A-Za-z._][A-Za-z0-9._]*)\(([^)]*)\)\}", t, re.S)
-        if not m:
+        body = _braced(t, "usage")
+        if body is None:
+            continue                       # no \usage section at all
+        body = body.strip()
+        if "(" not in body:
+            # A data page's \usage lists the object names it documents, one per
+            # line -- NORMAL_MU4.Rd legitimately lists two. So the test is not
+            # "exactly one identifier" (that was too strict and fired on a
+            # correct page); it is that every name listed is one this page
+            # actually documents. A mangled \usage fails that, instead of being
+            # waved through as "just a constant", which is how it would escape
+            # both this check and notice.
+            page_aliases = set(re.findall(r"\\alias\{([^}]+)\}", t))
+            stray = [w for w in body.split() if w not in page_aliases]
+            if stray:
+                fail.append("%s: \\usage{%s} has no call, and %s %s not among the "
+                            "names this page documents (%s)"
+                            % (p.name, " ".join(body.split())[:60],
+                               ", ".join(stray[:4]), "is" if len(stray) == 1 else "are",
+                               ", ".join(sorted(page_aliases)) or "none"))
+            else:
+                rd_usage_novalue += 1
             continue
-        fn, usage_args = m.group(1), m.group(2)
+        m = re.match(r"\\method\{([A-Za-z._][A-Za-z0-9._]*)\}"
+                     r"\{([A-Za-z._][A-Za-z0-9._]*)\}\s*\(", body)
+        if m:
+            fn = "%s.%s" % (m.group(1), m.group(2))
+        else:
+            m = re.match(r"([A-Za-z._][A-Za-z0-9._]*)\s*\(", body)
+            fn = m.group(1) if m else None
+        usage_args = _parens(body, m.end() - 1) if m else None
+        if fn is None or usage_args is None:
+            fail.append(
+                "%s: this checker cannot parse the \\usage section %r. It is "
+                "reported rather than skipped: skipping would turn the "
+                "signature and argument checks off for this page without "
+                "saying so." % (p.name, " ".join(body.split())[:120]))
+            continue
         d = re.search(r"^%s\s*<-\s*function\s*\(" % re.escape(fn), src, re.M)
         if not d:
+            fail.append("%s documents \\usage for %s(), which is defined nowhere "
+                        "in R/" % (p.name, fn))
             continue
-        depth, j, buf = 0, d.end() - 1, ""
-        while j < len(src):
-            buf += src[j]
-            depth += (src[j] == "(") - (src[j] == ")")
-            if depth == 0:
-                break
-            j += 1
-        real = [a.split("=")[0].strip() for a in re.sub(r"\s+", " ", buf[1:-1]).split(",") if a.strip()]
-        used = [a.split("=")[0].strip() for a in re.sub(r"\s+", " ", usage_args).split(",") if a.strip()]
+        rd_usage_checked += 1
+        real_src = _parens(src, d.end() - 1) or ""
+        real, used = _argnames(real_src), _argnames(usage_args)
         if real != used:
             fail.append("%s.Rd usage %s does not match the signature %s" % (fn, used, real))
+        else:
+            # Names agreeing is not enough: a documented DEFAULT that the code
+            # does not use sends the reader to the wrong behaviour, and the
+            # names-only comparison cannot see it. Compared on normalised
+            # whitespace, because a \usage wrapped to stay under 90 characters
+            # carries newlines and indentation the source does not.
+            norm = lambda s: [" ".join(a.split()) for a in _argsplit(s)]
+            if norm(real_src) != norm(usage_args):
+                fail.append("%s.Rd documents defaults the signature does not "
+                            "have:\n        documented %s\n        actual     %s"
+                            % (fn, norm(usage_args), norm(real_src)))
         documented = set(re.findall(r"\\item\{([^}]+)\}", t))
         for a in real:
             if a not in documented and a != "...":
                 fail.append("%s.Rd does not document argument '%s'" % (fn, a))
+
+    if rd_usage_checked == 0:
+        fail.append("no help page had its \\usage compared against a real "
+                    "signature. The usage check would report PASS having "
+                    "examined nothing, which is the failure shape this project "
+                    "has hit before.")
+    else:
+        info.append("usage checked against the real signature on %d help pages "
+                    "(%d more document a constant and have no arguments)"
+                    % (rd_usage_checked, rd_usage_novalue))
 
     # --- balance of braces/parens/quotes per file ---
     for p in sorted(list((R / "R").glob("*.R")) + list((R / "tests").rglob("*.R"))):
