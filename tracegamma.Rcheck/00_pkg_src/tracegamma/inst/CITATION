@@ -1,0 +1,19 @@
+## R's own citation file. `citation("tracegamma")` reads this one.
+##
+## CITATION.cff at the package root is the machine-readable citation for
+## GitHub and Zenodo; it is excluded from the built tarball by .Rbuildignore,
+## because R CMD check NOTEs a CITATION.cff inside inst/ as a citation file in
+## a non-standard place. The two must say the same thing; check_release_metadata.py
+## enforces that the .cff carries the concept DOI, and the version below is read
+## from DESCRIPTION rather than written out, so it cannot drift.
+
+bibentry(
+  bibtype  = "Manual",
+  title    = "{tracegamma}: The Trace-Gamma Calibrated Reference for Quadratic-Form Tests",
+  author   = person("William J.", "Dwyer",
+                    comment = c(ORCID = "0009-0004-0855-7222")),
+  year     = "2026",
+  note     = sprintf("R package version %s", meta$Version),
+  doi      = "10.5281/zenodo.24354607",
+  url      = "https://github.com/wjdwyer/tracegamma"
+)

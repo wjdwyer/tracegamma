@@ -1,0 +1,42 @@
+IMHOF_PANELS            Number of half-period panels used by the panel
+                        method
+NORMAL_MU4              Standardized fourth and sixth moments of the
+                        standard normal
+SKEW_FLOOR              Skewness floor below which the fit degenerates
+                        to the two-cumulant form
+VAR_FLOOR               Lower clamp on the second cumulant
+bb_scale_mixture        Berger-Boos dilation of a trace-gamma cutoff
+cf_modulus              Modulus of the characteristic function
+cumulants_from_eigs     Cumulants of the exact generalized chi-square
+cumulants_from_traces   Cumulants of a quadratic form from its traces
+estimate_moments        Plug-in standardized moments from a pooled
+                        sample
+imhof_cdf               Exact distribution function of a generalized
+                        chi-square
+imhof_ppf               Exact quantile of a generalized chi-square
+imhof_sf                Exact survival function of a generalized
+                        chi-square (Imhof 1961)
+kurtosis_defect         Kurtosis defect
+kurtosis_widening       Marginal-kurtosis widening of the second
+                        cumulant
+marginal_cumulants      Exact cumulants of a sum of squares under a
+                        non-normal marginal
+params_from_power_sums
+                        Closed-form parameters from the eigenvalue
+                        power sums
+print.trace_gamma       Print a trace-gamma fit
+rho_ratio               Flatness ratio of a spectrum
+standardized_cumulant   Standardized cumulant of a generalized
+                        chi-square
+tail_rate_defect        Tail-rate defect
+tg_cdf                  Distribution function of a trace-gamma
+tg_cutoff               Upper-tail critical value of a trace-gamma
+tg_pdf                  Density of a trace-gamma
+tg_ppf                  Quantile function of a trace-gamma
+tg_rvs                  Random variates from a trace-gamma
+tg_sf                   Survival function of a trace-gamma
+trace_gamma             The trace-gamma reference distribution
+tracegamma_from_marginal
+                        Trace-gamma reference under a common non-normal
+                        marginal
+traces_from_quadform    Exact traces of a quadratic form

@@ -1,0 +1,32 @@
+Package: tracegamma
+Type: Package
+Title: The Trace-Gamma Calibrated Reference for Quadratic-Form Tests
+Version: 0.1.1
+Authors@R: person("William J.", "Dwyer", role = c("aut", "cre"),
+                  email = "wjdwyer@trialdesign.com",
+                  comment = c(ORCID = "0009-0004-0855-7222"))
+Description: The trace-gamma distribution is the closed-form shifted, scaled
+    chi-square matched to the first three cumulants of a quadratic form in
+    near-normal variables. Those cumulants are exact traces of one matrix
+    product (Lancaster, 1954), and the three-moment fit is that of Solomon and
+    Stephens (1977). Welch's F is the two-cumulant member of the family and
+    Pearson's chi-square the equal-eigenvalue member, so the family contains
+    the classical references rather than competing with them. Also provides the
+    exact generalized chi-square by Imhof (1961) numerical inversion, for
+    checking the closed form against the truth rather than against simulation,
+    the kurtosis and tail-rate defects that govern the approximation error, and
+    an estimable correction for non-normal inputs.
+License: MIT + file LICENSE
+Encoding: UTF-8
+URL: https://github.com/wjdwyer/tracegamma
+BugReports: https://github.com/wjdwyer/tracegamma/issues
+Depends: R (>= 3.6)
+Imports: stats, utils
+Suggests: testthat (>= 3.0.0), jsonlite
+Config/testthat/edition: 3
+RoxygenNote: 7.3.1
+NeedsCompilation: no
+Packaged: 2026-11-19 00:39:11 UTC; williamdwyer
+Author: William J. Dwyer [aut, cre] (ORCID:
+    <https://orcid.org/0009-0004-0855-7222>)
+Maintainer: William J. Dwyer <wjdwyer@trialdesign.com>
