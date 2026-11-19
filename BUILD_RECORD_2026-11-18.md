@@ -394,8 +394,23 @@ not a repair.
 
 ### 9.6 Still open
 
-1. `cran-comments.md` is a template. CRAN asks the submitter to account for
-   every NOTE, and the NOTEs from the passing `--as-cran` run have not been read.
+1. ~~`cran-comments.md` is a template.~~ **Closed.** The NOTEs were read: four
+   of them, plus one INFO. All five are fixed rather than explained, and
+   `R CMD check --as-cran` now reports **`Status: OK`** — run #4 on commit
+   `7a6014c`, success on all four configs, the Ubuntu release log read line by
+   line. `cran-comments.md` is written against that run and says explicitly
+   which log was read, because a NOTE does not fail the job and the other three
+   logs were not read.
+
+   Fixing two of the NOTEs required repairing `check_r_package.py` first: its
+   `\usage` parser required `)}` adjacent and a bare function name, so a wrapped
+   usage and `\method` markup — the two fixes — would have made it skip those
+   pages silently. The repair then found three pages (`imhof_cdf`, `imhof_ppf`,
+   `imhof_sf`) whose usage had never been checked at all, because the default
+   `method = c("panel", "quad")` contains a parenthesis the old pattern could
+   not see past. Nine mutations now fire with the right cause; two of my own
+   mutations had to be rebuilt, one a `sed` that silently matched nothing and
+   one that hit an `\alias` as well as the `\usage`.
 2. Dependency floors (`numpy>=1.21`, `scipy>=1.7`) are declared and untested,
    and vacuous at the bottom now that the floor is Python 3.10.
 3. §7 item 2 — whether the Imhof defect touches the paper's published
